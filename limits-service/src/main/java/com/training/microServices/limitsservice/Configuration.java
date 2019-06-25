@@ -2,7 +2,6 @@ package com.training.microServices.limitsservice;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-
 @ConfigurationProperties("limits-service")
 public class Configuration {
     private int minimum;
