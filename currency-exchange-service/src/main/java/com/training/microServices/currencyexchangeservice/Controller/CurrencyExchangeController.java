@@ -1,6 +1,7 @@
 package com.training.microServices.currencyexchangeservice.Controller;
 
-import com.training.microServices.currencyexchangeservice.DTO.ExchangeValue;
+import com.training.microServices.currencyexchangeservice.Domain.ExchangeValue;
+import com.training.microServices.currencyexchangeservice.Service.CurrencyExchangeService;
 import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,20 @@ public class CurrencyExchangeController {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    CurrencyExchangeService currencyExchangeService;
+
     @GetMapping("/currency-exchange/from/{from}/to/{to}")
     public ExchangeValue retrieveExchangeValue(@PathVariable String from , @PathVariable String to)
     {
-        ExchangeValue exchangeValue =  new ExchangeValue(1000L,"USD","INR", BigDecimal.valueOf(65));
-        exchangeValue.setPort(Integer.parseInt(environment.getProperty("local.server.port")));
-        return exchangeValue;
+        ExchangeValue exchangeValue = currencyExchangeService.getExchangeValueUsingFromAndToCurrency(from,to);
+        if(exchangeValue!=null) {
+            exchangeValue.setPort(Integer.parseInt(environment.getProperty("local.server.port")));
+            return exchangeValue;
+        }
+        else
+        {
+            return new ExchangeValue();
+        }
     }
 }
